@@ -11,8 +11,9 @@ const scene = new THREE.Scene()
 // Текстури
 const loadingManager = new THREE.LoadingManager()
 loadingManager.onError = (url) => console.error('НЕ ЗНАЙДЕНО ТЕКСТУРУ:', url)
-const textureLoader = new THREE.TextureLoader(loadingManager)
-const exrLoader = new EXRLoader(loadingManager)
+const BASE = import.meta.env.BASE_URL
+const textureLoader = new THREE.TextureLoader(loadingManager).setPath(BASE)
+const exrLoader = new EXRLoader(loadingManager).setPath(BASE)
 
 const repeatTextures = (textures, x, y) => {
     for (const texture of textures) {
@@ -22,7 +23,7 @@ const repeatTextures = (textures, x, y) => {
     }
 }
 
-const plainLoader = new THREE.TextureLoader()
+const plainLoader = new THREE.TextureLoader().setPath(BASE)
 const loadAny = (label, paths, colorSpace) => {
     const texture = new THREE.Texture()
     if (colorSpace) texture.colorSpace = colorSpace
@@ -79,13 +80,13 @@ const loadPBR = (prefix, size) => {
 }
 
 // Двері
-const doorAlphaTexture = textureLoader.load('/door/alpha.jpg')
-const doorAOTexture = textureLoader.load('/door/ambientOcclusion.jpg')
-const doorHeightTexture = textureLoader.load('/door/height.jpg')
-const doorMetalnessTexture = textureLoader.load('/door/metalness.jpg')
+const doorAlphaTexture = textureLoader.load('door/alpha.jpg')
+const doorAOTexture = textureLoader.load('door/ambientOcclusion.jpg')
+const doorHeightTexture = textureLoader.load('door/height.jpg')
+const doorMetalnessTexture = textureLoader.load('door/metalness.jpg')
 
 // Стіни
-const wallTexturePath = '/wall/weathered_planks_4k.blend/textures/'
+const wallTexturePath = 'wall/weathered_planks_4k.blend/textures/'
 const wallColorTexture = textureLoader.load(wallTexturePath + 'weathered_planks_diff_4k.jpg')
 const wallNormalTexture = exrLoader.load(wallTexturePath + 'weathered_planks_nor_gl_4k.exr')
 const wallRoughnessTexture = exrLoader.load(wallTexturePath + 'weathered_planks_rough_4k.exr')
@@ -93,15 +94,15 @@ wallColorTexture.colorSpace = THREE.SRGBColorSpace
 repeatTextures([wallColorTexture, wallNormalTexture, wallRoughnessTexture], 2, 2)
 
 const { color: roofColorTexture, normal: roofNormalTexture, roughness: roofRoughnessTexture } =
-    loadPBR('/roof/rooftop_0004_1k_h3DaDw/rooftop_0004_', '1k')
+    loadPBR('roof/rooftop_0004_1k_h3DaDw/rooftop_0004_', '1k')
 repeatTextures([roofColorTexture, roofNormalTexture, roofRoughnessTexture], 3, 2)
 
 const { color: trimColorTexture, normal: trimNormalTexture, roughness: trimRoughnessTexture } =
-    loadPBR('/door/wood_0048_2k_4kbBB2/wood_0048_', '2k')
+    loadPBR('door/wood_0048_2k_4kbBB2/wood_0048_', '2k')
 repeatTextures([trimColorTexture, trimNormalTexture, trimRoughnessTexture], 1, 1)
 
 // Димар
-const chimneyPath = '/roof/roof_slates_02_1k/roof_slates_02_'
+const chimneyPath = 'roof/roof_slates_02_1k/roof_slates_02_'
 const chimneyColorTexture = textureLoader.load(chimneyPath + 'diff_1k.jpg')
 const chimneyNormalTexture = textureLoader.load(chimneyPath + 'nor_gl_1k.jpg')
 const chimneyARMTexture = textureLoader.load(chimneyPath + 'arm_1k.jpg')
@@ -112,14 +113,14 @@ repeatTextures([chimneyColorTexture, chimneyNormalTexture, chimneyARMTexture], 1
 const logLoaded = (name) => (texture) =>
     console.log('Текстуру завантажено:', name, texture.image.width + 'x' + texture.image.height)
 
-const legPath = '/chicken-feet/Wood048_2K-JPG/Wood048_2K-JPG_'
+const legPath = 'chicken-feet/Wood048_2K-JPG/Wood048_2K-JPG_'
 const legColorTexture = textureLoader.load(legPath + 'Color.jpg', logLoaded('Color'))
 const legNormalTexture = textureLoader.load(legPath + 'NormalGL.jpg', logLoaded('NormalGL'))
 const legRoughnessTexture = textureLoader.load(legPath + 'Roughness.jpg', logLoaded('Roughness'))
 legColorTexture.colorSpace = THREE.SRGBColorSpace
 repeatTextures([legColorTexture, legNormalTexture, legRoughnessTexture], 1, 2.5)
 
-const clawPath = '/claws/Marble012_2K-JPG/Marble012_2K-JPG_'
+const clawPath = 'claws/Marble012_2K-JPG/Marble012_2K-JPG_'
 const clawColorTexture = textureLoader.load(clawPath + 'Color.jpg', logLoaded('Claw Color'))
 const clawNormalTexture = textureLoader.load(clawPath + 'NormalGL.jpg', logLoaded('Claw NormalGL'))
 const clawRoughnessTexture = textureLoader.load(clawPath + 'Roughness.jpg', logLoaded('Claw Roughness'))
@@ -128,11 +129,11 @@ repeatTextures([clawColorTexture, clawNormalTexture, clawRoughnessTexture], 1, 1
 
 // Каміння
 const { color: rock060ColorTexture, normal: rock060NormalTexture, roughness: rock060RoughnessTexture } =
-    loadPBR('/stone/Rock060_2K-JPG/Rock060_2K-JPG_', null)
+    loadPBR('stone/Rock060_2K-JPG/Rock060_2K-JPG_', null)
 repeatTextures([rock060ColorTexture, rock060NormalTexture, rock060RoughnessTexture], 1, 1)
 
 const { color: rock051ColorTexture, normal: rock051NormalTexture, roughness: rock051RoughnessTexture } =
-    loadPBR('/stone/Rock051_2K-JPG/Rock051_2K-JPG_', null)
+    loadPBR('stone/Rock051_2K-JPG/Rock051_2K-JPG_', null)
 repeatTextures([rock051ColorTexture, rock051NormalTexture, rock051RoughnessTexture], 1, 1)
 
 const loadTexture = (path) =>
@@ -140,16 +141,16 @@ const loadTexture = (path) =>
 
 // Земля з мохом
 const { color: groundColorTexture, normal: groundNormalTexture, roughness: groundRoughnessTexture } =
-    loadPBR('/mud/Moss001_2K-JPG/Moss001_2K-JPG_', null)
+    loadPBR('mud/Moss001_2K-JPG/Moss001_2K-JPG_', null)
 repeatTextures([groundColorTexture, groundNormalTexture, groundRoughnessTexture], 8, 8)
 
 // Кора
 const { color: barkColorTexture, normal: barkNormalTexture, roughness: barkRoughnessTexture } =
-    loadPBR('/tree/wood_0063_1k_wJSQiY/wood_0063_', '1k')
+    loadPBR('tree/wood_0063_1k_wJSQiY/wood_0063_', '1k')
 repeatTextures([barkColorTexture, barkNormalTexture, barkRoughnessTexture], 1, 2)
 
 const { color: needlesColorTexture, normal: needlesNormalTexture, roughness: needlesRoughnessTexture } =
-    loadPBR('/tree/Moss004_2K-JPG/Moss004_2K-JPG_', null)
+    loadPBR('tree/Moss004_2K-JPG/Moss004_2K-JPG_', null)
 repeatTextures([needlesColorTexture, needlesNormalTexture, needlesRoughnessTexture], 3, 2)
 
 // Казан
@@ -158,27 +159,27 @@ const {
     normal: cauldronNormalTexture,
     roughness: cauldronRoughnessTexture,
     metal: cauldronMetalnessTexture
-} = loadPBR('/cauldron/metal_0056_1k_FTr9Ul/metal_0056_', '1k')
+} = loadPBR('cauldron/metal_0056_1k_FTr9Ul/metal_0056_', '1k')
 repeatTextures([cauldronColorTexture, cauldronNormalTexture, cauldronRoughnessTexture, cauldronMetalnessTexture], 2, 2)
 
 const { color: potionColorTexture, normal: potionNormalTexture, roughness: potionRoughnessTexture } =
-    loadPBR('/cauldron/metal_0055_1k_zDowSI/metal_0055_', '1k')
+    loadPBR('cauldron/metal_0055_1k_zDowSI/metal_0055_', '1k')
 repeatTextures([potionColorTexture, potionNormalTexture, potionRoughnessTexture], 2, 2)
 
 // Черепи
 const { color: skullColorTexture, normal: skullNormalTexture, roughness: skullRoughnessTexture } =
-    loadPBR('/skull/plastic_0008_1k_4S3Yme/plastic_0008_', '1k')
+    loadPBR('skull/plastic_0008_1k_4S3Yme/plastic_0008_', '1k')
 repeatTextures([skullColorTexture, skullNormalTexture, skullRoughnessTexture], 1, 1)
 
 // Бруд
-const mudPath = '/mud/Ground051_1K-JPG/Ground051_1K-JPG_'
+const mudPath = 'mud/Ground051_1K-JPG/Ground051_1K-JPG_'
 const mudColorTexture = loadTexture(mudPath + 'Color.jpg')
 const mudNormalTexture = loadTexture(mudPath + 'NormalGL.jpg')
 const mudRoughnessTexture = loadTexture(mudPath + 'Roughness.jpg')
 mudColorTexture.colorSpace = THREE.SRGBColorSpace
 repeatTextures([mudColorTexture, mudNormalTexture, mudRoughnessTexture], 3, 3)
 
-const waterPath = '/water-lily/ground_0033_2k_S2sDPs/ground_0033_'
+const waterPath = 'water-lily/ground_0033_2k_S2sDPs/ground_0033_'
 const waterColorTexture = loadTexture(waterPath + 'color_2k.jpg')
 const waterNormalTexture = loadTexture(waterPath + 'normal_opengl_2k.png')
 const waterRoughnessTexture = loadTexture(waterPath + 'roughness_2k.jpg')
@@ -186,14 +187,14 @@ waterColorTexture.colorSpace = THREE.SRGBColorSpace
 repeatTextures([waterColorTexture, waterNormalTexture, waterRoughnessTexture], 1.5, 1.5)
 
 // Очерет
-const stemPath = '/cane/Wood065_1K-JPG/Wood065_1K-JPG_'
+const stemPath = 'cane/Wood065_1K-JPG/Wood065_1K-JPG_'
 const stemColorTexture = loadTexture(stemPath + 'Color.jpg')
 const stemNormalTexture = loadTexture(stemPath + 'NormalGL.jpg')
 const stemRoughnessTexture = loadTexture(stemPath + 'Roughness.jpg')
 stemColorTexture.colorSpace = THREE.SRGBColorSpace
 repeatTextures([stemColorTexture, stemNormalTexture, stemRoughnessTexture], 1, 4)
 
-const tipPath = '/cane/Wood028_1K-JPG/Wood028_1K-JPG_'
+const tipPath = 'cane/Wood028_1K-JPG/Wood028_1K-JPG_'
 const tipColorTexture = loadTexture(tipPath + 'Color.jpg')
 const tipNormalTexture = loadTexture(tipPath + 'NormalGL.jpg')
 const tipRoughnessTexture = loadTexture(tipPath + 'Roughness.jpg')
@@ -415,7 +416,6 @@ const windowMat = new THREE.MeshStandardMaterial({
     emissiveIntensity: 2
 })
 
-
 const mulberry32 = (a) => () => {
     a |= 0
     a = (a + 0x6d2b79f5) | 0
@@ -434,7 +434,6 @@ const shade = (object, cast = true, receive = true) => {
         }
     })
 }
-
 
 const makeGable = (w, h, d, material) => {
     const shape = new THREE.Shape()
@@ -1139,13 +1138,13 @@ for (let i = 0; i < 100; i++) {
 grass.count = tufts
 scene.add(grass)
 
-// Блукаючий вогник
 const wispGlowTexture = makeGlowTexture([
     [0, 'rgba(255, 255, 255, 1)'],
     [0.25, 'rgba(255, 255, 255, 0.35)'],
     [1, 'rgba(255, 255, 255, 0)']
 ])
 
+// Блукаючий вогник
 const makeWisp = (color) => {
     const wisp = new THREE.PointLight(color, 3, 6)
     const glow = new THREE.Sprite(new THREE.SpriteMaterial({
@@ -1196,7 +1195,6 @@ scene.add(moonLight)
 shade(hut)
 fence.traverse((obj) => { if (obj.isMesh) obj.castShadow = true })
 
-
 const fog = new THREE.FogExp2('#12162a', 0.04)
 scene.fog = fog
 
@@ -1214,6 +1212,7 @@ skyMesh.material.onBeforeCompile = (shader) => {
     )
 }
 const sun = new THREE.Vector3()
+
 const moonPosition = new THREE.Vector3(6, 10, -4)
 const sunPosition = new THREE.Vector3()
 const nightLook = { light: new THREE.Color('#8fb0ff'), ambient: new THREE.Color('#6a5fa0'), fog: new THREE.Color('#12162a') }
@@ -1232,14 +1231,18 @@ const updateSky = () => {
 
     const day = THREE.MathUtils.smoothstep(skyParams.elevation, -3, 25)
     skyBrightness.value = THREE.MathUtils.lerp(0.25, 1, day)
+
     sunPosition.copy(sun).multiplyScalar(12)
     moonLight.position.lerpVectors(moonPosition, sunPosition, day)
     moonLight.color.lerpColors(nightLook.light, dayLook.light, day)
     moonLight.intensity = THREE.MathUtils.lerp(1.5, 3, day)
+
     ambientLight.color.lerpColors(nightLook.ambient, dayLook.ambient, day)
     ambientLight.intensity = THREE.MathUtils.lerp(0.6, 1, day)
+
     fog.color.lerpColors(nightLook.fog, dayLook.fog, day)
     fog.density = THREE.MathUtils.lerp(0.04, 0.015, day)
+
     stars.material.opacity = 0.8 * (1 - day)
 }
 
@@ -1328,7 +1331,7 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-//Анімація
+// Анімація
 const clock = new THREE.Clock()
 const wrap01 = (v) => ((v % 1) + 1) % 1
 
